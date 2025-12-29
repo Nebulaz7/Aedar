@@ -41,7 +41,7 @@ const SignIn = () => {
             <h1 className="text-3xl font-black text-black uppercase tracking-tight">
               Welcome To{" "}
               <span className="bg-linear-to-r from-emerald-500 to-black text-transparent bg-clip-text">
-                Aeder
+                Aedar
               </span>
             </h1>
           </div>

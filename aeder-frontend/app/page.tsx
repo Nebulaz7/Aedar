@@ -27,7 +27,7 @@ export default function Home() {
               <Rocket size={20} className="text-black" />
             </div> */}
             <span className="text-2xl font-black bg-linear-to-r from-emerald-500 to-black text-transparent bg-clip-text">
-              AEDER
+              AEDAR
             </span>
           </div>
           <div className="hidden md:flex items-center gap-8">
@@ -120,7 +120,7 @@ export default function Home() {
                 <div className="w-4 h-4 bg-red-500 border-2 border-black rounded-full" />
                 <div className="w-4 h-4 bg-yellow-500 border-2 border-black rounded-full" />
                 <div className="w-4 h-4 bg-emerald-500 border-2 border-black rounded-full" />
-                <span className="ml-4 font-bold text-black/50">Aeder Chat</span>
+                <span className="ml-4 font-bold text-black/50">Aedar Chat</span>
               </div>
 
               <div className="space-y-4">
@@ -216,7 +216,7 @@ export default function Home() {
               Everything You Need to Execute
             </h2>
             <p className="text-xl text-black/60 max-w-2xl mx-auto font-medium">
-              From brainstorming to calendar events — Aeder handles the entire
+              From brainstorming to calendar events — Aedar handles the entire
               planning workflow.
             </p>
           </div>
@@ -336,7 +336,7 @@ export default function Home() {
                     Describe Your Idea
                   </h3>
                   <p className="text-black/60 font-medium">
-                    Chat naturally with Aeder about what you want to build. Be
+                    Chat naturally with Aedar about what you want to build. Be
                     as detailed or vague as you want — the AI will ask
                     clarifying questions.
                   </p>
@@ -355,7 +355,7 @@ export default function Home() {
                     Get Your Roadmap
                   </h3>
                   <p className="text-black/60 font-medium">
-                    Aeder generates a structured technical roadmap with phases,
+                    Aedar generates a structured technical roadmap with phases,
                     tasks, and realistic time estimates based on your goals.
                   </p>
                 </div>
@@ -398,16 +398,16 @@ export default function Home() {
           <div className="space-y-4">
             {[
               {
-                q: "What makes Aeder different from other planning tools?",
-                a: "Aeder doesn't just help you plan — it executes. Your roadmaps become calendar events automatically. No more planning that sits in a document.",
+                q: "What makes Aeaer different from other planning tools?",
+                a: "Aedar doesn't just help you plan — it executes. Your roadmaps become calendar events automatically. No more planning that sits in a document.",
               },
               {
                 q: "How does the calendar integration work?",
-                a: "Connect your Google Calendar in settings, then click 'Add to Calendar' on any roadmap. Aeder schedules work blocks based on your milestones and availability.",
+                a: "Connect your Google Calendar in settings, then click 'Add to Calendar' on any roadmap. Aedar schedules work blocks based on your milestones and availability.",
               },
               {
                 q: "Can I modify the generated roadmaps?",
-                a: "Absolutely! Every roadmap is fully editable. Adjust phases, change timelines, add or remove tasks — Aeder adapts to your needs.",
+                a: "Absolutely! Every roadmap is fully editable. Adjust phases, change timelines, add or remove tasks — Aedar adapts to your needs.",
               },
               {
                 q: "Is my data secure?",
@@ -450,7 +450,7 @@ export default function Home() {
             </h2>
             <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto font-medium relative z-10">
               Join developers and teams who&apos;ve transformed their planning
-              workflow with Aeder.
+              workflow with Aedar.
             </p>
             <Link
               href="/signin"
@@ -472,7 +472,7 @@ export default function Home() {
                 <Rocket size={20} className="text-black" />
               </div> */}
               <span className="text-2xl font-black bg-linear-to-r from-emerald-500 to-black text-transparent bg-clip-text">
-                AEDER
+                AEDAR
               </span>
             </div>
 
@@ -521,7 +521,7 @@ export default function Home() {
 
           <div className="mt-8 pt-8 border-t-2 border-black/10 text-center">
             <p className="text-black/50 font-medium">
-              © 2025 Aeder. Built with 💚 for builders who ship.
+              © 2025 Aedar. Built with 💚 for builders who ship.
             </p>
           </div>
         </div>

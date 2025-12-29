@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aeder - AI-Powered Roadmap Generator",
+  title: "Aedar - AI-Powered Roadmap Generator",
   description: "Create personalized roadmaps",
 };
 

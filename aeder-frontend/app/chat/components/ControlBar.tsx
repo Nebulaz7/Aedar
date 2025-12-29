@@ -82,7 +82,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
             className="text-2xl font-black uppercase tracking-tight"
           >
             <span className="bg-linear-to-r from-emerald-500 to-black text-transparent bg-clip-text">
-              Aeder
+              Aedar
             </span>
           </Link>
         </div>
