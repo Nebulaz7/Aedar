@@ -227,7 +227,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({
           <button
             onClick={onAddToCalendar}
             disabled={isAddingToCalendar}
-            className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-6 py-3 bg-emerald-400 border-3 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-6 py-3 bg-emerald-400 border-3 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isAddingToCalendar ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -239,7 +239,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({
 
           <button
             onClick={onModifyPlan}
-            className="flex-1 flex items-center text-black cursor-pointer justify-center gap-2 px-6 py-3 bg-white border-3 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="flex-1 flex items-center text-black cursor-pointer justify-center gap-2 px-6 py-3 bg-white border-3 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
           >
             <Edit3 className="w-5 h-5" />
             Modify Plan
@@ -247,7 +247,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({
 
           <button
             onClick={onExport}
-            className="px-4 py-3 bg-white border-3 cursor-pointer text-black border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="px-4 py-3 bg-white border-3 cursor-pointer text-black border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
             title="Export"
           >
             <Download className="w-5 h-5" />

@@ -24,7 +24,7 @@ const SuggestionPill: React.FC<SuggestionPillProps> = ({
         font-bold text-sm text-black
         shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
         hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-        hover:translate-x-[2px] hover:translate-y-[2px]
+        hover:translate-x-0.5 hover:translate-y-[2px]
         hover:bg-emerald-100
         transition-all duration-150
         ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}

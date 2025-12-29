@@ -59,7 +59,7 @@ export default function Home() {
             </Link>
             <Link
               href="/signin"
-              className="px-5 py-2 bg-emerald-400 border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="px-5 py-2 bg-emerald-400 border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
             >
               Get Started
             </Link>
@@ -223,7 +223,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all">
+            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all">
               <div className="w-14 h-14 bg-emerald-400 border-3 border-black flex items-center justify-center mb-4">
                 <Brain size={28} className="text-black" />
               </div>
@@ -237,7 +237,7 @@ export default function Home() {
             </div>
 
             {/* Feature 2 */}
-            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all">
+            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all">
               <div className="w-14 h-14 bg-yellow-300 border-3 border-black flex items-center justify-center mb-4">
                 <Target size={28} className="text-black" />
               </div>
@@ -251,7 +251,7 @@ export default function Home() {
             </div>
 
             {/* Feature 3 */}
-            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all">
+            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all">
               <div className="w-14 h-14 bg-pink-400 border-3 border-black flex items-center justify-center mb-4">
                 <Calendar size={28} className="text-black" />
               </div>
@@ -265,7 +265,7 @@ export default function Home() {
             </div>
 
             {/* Feature 4 */}
-            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all">
+            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all">
               <div className="w-14 h-14 bg-blue-400 border-3 border-black flex items-center justify-center mb-4">
                 <Clock size={28} className="text-black" />
               </div>
@@ -279,7 +279,7 @@ export default function Home() {
             </div>
 
             {/* Feature 5 */}
-            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all">
+            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all">
               <div className="w-14 h-14 bg-orange-400 border-3 border-black flex items-center justify-center mb-4">
                 <Users size={28} className="text-black" />
               </div>
@@ -293,7 +293,7 @@ export default function Home() {
             </div>
 
             {/* Feature 6 */}
-            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all">
+            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all">
               <div className="w-14 h-14 bg-purple-400 border-3 border-black flex items-center justify-center mb-4">
                 <Shield size={28} className="text-black" />
               </div>

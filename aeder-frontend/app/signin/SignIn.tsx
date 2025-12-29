@@ -58,7 +58,7 @@ const SignIn = () => {
           <div className="space-y-4">
             <button
               onClick={() => handleOAuthLogin("google")}
-              className="w-full bg-white cursor-pointer hover:bg-gray-100 text-black font-bold py-4 px-4 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 flex items-center justify-center gap-3"
+              className="w-full bg-white cursor-pointer hover:bg-gray-100 text-black font-bold py-4 px-4 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all duration-150 flex items-center justify-center gap-3"
             >
               <svg
                 className="w-5 h-5"
@@ -88,7 +88,7 @@ const SignIn = () => {
 
             <button
               onClick={() => handleOAuthLogin("github")}
-              className="w-full cursor-pointer bg-emerald-400 hover:bg-emerald-500 text-black font-bold py-4 px-4 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 flex items-center justify-center gap-3"
+              className="w-full cursor-pointer bg-emerald-400 hover:bg-emerald-500 text-black font-bold py-4 px-4 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all duration-150 flex items-center justify-center gap-3"
             >
               <svg
                 className="w-5 h-5"

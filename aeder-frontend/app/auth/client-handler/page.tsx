@@ -149,7 +149,7 @@ function ClientAuthHandler() {
         ) : (
           <button
             onClick={() => router.push("/signin")}
-            className="w-full bg-emerald-400 hover:bg-emerald-500 text-black font-bold py-3 px-4 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="w-full bg-emerald-400 hover:bg-emerald-500 text-black font-bold py-3 px-4 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
           >
             Return to Sign In
           </button>

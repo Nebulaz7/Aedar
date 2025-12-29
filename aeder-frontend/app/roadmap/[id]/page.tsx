@@ -209,7 +209,9 @@ export default function RoadmapPage() {
     setIsAddingToCalendar(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/mcp/calendar/execute`,
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+        }/mcp/calendar/execute`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -304,7 +306,7 @@ export default function RoadmapPage() {
           <p className="text-black/60 font-medium mb-6">{error}</p>
           <Link
             href="/chat"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-400 border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-400 border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
           >
             <Home className="w-5 h-5" />
             Go to Chat
@@ -327,7 +329,7 @@ export default function RoadmapPage() {
             <div className="flex items-center gap-4">
               <Link
                 href="/chat"
-                className="p-2 bg-white cursor-pointer text-black border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                className="p-2 bg-white cursor-pointer text-black border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Link>
@@ -364,7 +366,7 @@ export default function RoadmapPage() {
               {/* Copy Link */}
               <button
                 onClick={handleCopyLink}
-                className="flex items-center cursor-pointer text-black gap-2 px-4 py-2 bg-white border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                className="flex items-center cursor-pointer text-black gap-2 px-4 py-2 bg-white border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
                 title="Copy link"
               >
                 {copied ? (
@@ -387,7 +389,7 @@ export default function RoadmapPage() {
                   <button
                     onClick={handleTogglePublic}
                     disabled={isTogglingPublic}
-                    className={`flex items-center gap-2 px-4 py-2 border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 ${
+                    className={`flex items-center gap-2 px-4 py-2 border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all disabled:opacity-50 ${
                       roadmap.is_public ? "bg-emerald-400" : "bg-white"
                     }`}
                     title={roadmap.is_public ? "Make private" : "Make public"}
@@ -407,7 +409,7 @@ export default function RoadmapPage() {
                   {/* Delete */}
                   <button
                     onClick={() => setShowDeleteConfirm(true)}
-                    className="p-2 cursor-pointer bg-red-100 border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all hover:bg-red-200"
+                    className="p-2 cursor-pointer bg-red-100 border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all hover:bg-red-200"
                     title="Delete roadmap"
                   >
                     <Trash2 className="w-4 h-4 text-red-600" />
@@ -468,14 +470,14 @@ export default function RoadmapPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 px-4 py-3 bg-white border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                className="flex-1 px-4 py-3 bg-white border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-3 bg-red-500 text-white border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                className="flex-1 px-4 py-3 bg-red-500 text-white border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all disabled:opacity-50"
               >
                 {isDeleting ? (
                   <Loader2 className="w-5 h-5 animate-spin mx-auto" />

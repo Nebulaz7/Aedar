@@ -129,7 +129,7 @@ const Sidenav: React.FC<SidenavProps> = ({
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileSidenav}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px] transition-all"
         aria-label="Toggle navigation menu"
       >
         <Menu size={20} className="text-black" />
@@ -178,7 +178,7 @@ const Sidenav: React.FC<SidenavProps> = ({
               href="/chat"
               className={`flex items-center px-3 py-2 bg-emerald-400 border-3 border-black
                 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
-                hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold
+                hover:translate-x-0.5 hover:translate-y-[2px] transition-all font-bold
                 ${isExpanded ? "justify-start" : "justify-center"}`}
             >
               <MessageSquare size={18} className="text-black" />

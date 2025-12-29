@@ -60,7 +60,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/user/profile?userId=${userId}`
+          `${
+            process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+          }/user/profile?userId=${userId}`
         );
         if (res.ok) {
           const profile = await res.json();
@@ -186,7 +188,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         isCalendarConnected={isCalendarConnected}
         user={{ id: userId }}
         onCalendarConnected={() => {
-          console.log('Setting isCalendarConnected to true');
+          console.log("Setting isCalendarConnected to true");
           setIsCalendarConnected(true);
         }}
       />
@@ -198,9 +200,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         <div className="fixed bottom-20 right-10 w-12 h-12 bg-yellow-300 border-3 border-black -rotate-6 opacity-50 hidden xl:block" />
         <div className="fixed top-1/3 right-20 w-8 h-8 bg-pink-400 border-3 border-black rounded-full opacity-50 hidden xl:block" />
 
-        {/* Loading State */}
-        {loading && <LoadingState />}
-
         {/* Hero Text */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-black text-black mb-2 uppercase tracking-tight">
@@ -211,6 +210,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             Describe your idea, and Aedar will build the plan.
           </p>
         </div>
+
+        {/* Loading State */}
+        {loading && <LoadingState />}
 
         {/* Input Area - Always visible at top */}
         <div className="w-full max-w-3xl mt-auto pt-8 mb-auto">
@@ -233,7 +235,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         {!loading && typeof roadmap === "string" && (
           <div className="w-full max-w-2xl mb-8">
             <div className="bg-white border-4 border-black p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-              <p className="text-black font-medium text-center">{roadmap}</p>
+              <p className="text-black font-medium text-center">
+                Failed to fetch roadmap. Try again.
+                {/* {roadmap} */}
+              </p>
             </div>
           </div>
         )}

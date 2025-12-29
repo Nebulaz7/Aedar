@@ -234,7 +234,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
               disabled={isLoading || !inputValue.trim()}
               className={`p-3 border-3 border-black font-bold transition-all ${
                 inputValue.trim() && !isLoading
-                  ? "bg-emerald-400 cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
+                  ? "bg-emerald-400 cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-[2px]"
                   : "bg-gray-200 cursor-not-allowed"
               }`}
             >
