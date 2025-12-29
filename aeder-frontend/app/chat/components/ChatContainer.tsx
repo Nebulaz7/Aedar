@@ -118,6 +118,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         body: JSON.stringify({
           userMessage: message,
           planningDepth,
+          modelType: planningDepth,
         }),
       });
 

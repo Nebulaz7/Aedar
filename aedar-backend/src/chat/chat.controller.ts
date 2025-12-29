@@ -9,13 +9,14 @@ export class ChatController {
   @HttpCode(HttpStatus.OK)
   async handleChat(
     @Body('userMessage') userMessage: string,
+    @Body('modelType') modelType: 'sprint' | 'standard' | 'architect',
   ): Promise<RoadmapResponse | { error: string }> {
     if (!userMessage || typeof userMessage !== 'string' || userMessage.trim() === '') {
       return { error: 'userMessage is required and must be a non-empty string' };
     }
 
     try {
-      const result: RoadmapResponse = await this.chatService.generateRoadmap(userMessage.trim());
+      const result: RoadmapResponse = await this.chatService.generateRoadmap(userMessage.trim(), modelType);
 
       console.log('ROADMAP GENERATED SUCCESSFULLY');
       console.log('Calendar intent:', result.shouldTriggerCalendar);

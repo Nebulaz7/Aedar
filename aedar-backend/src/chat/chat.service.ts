@@ -18,9 +18,15 @@ export class ChatService {
     this.ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_API_KEY! });
   }
 
-  async generateRoadmap(userMessage: string): Promise<RoadmapResponse> {
+  async generateRoadmap(userMessage: string, modelType: 'sprint' | 'standard' | 'architect'): Promise<RoadmapResponse> {
     const { goal, known, experienceLevel } = await this.goalPreprocessor.preprocess(userMessage);
     const prompt = buildRoadmapPrompt(goal, known, experienceLevel);
+    const modelMap = {
+      sprint: 'gemini-2.5-flash',
+      standard: 'gemini-2.5-flash',
+      architect: 'gemini-2.5-flash',
+     };
+    const model = modelMap[modelType] || modelMap.standard;
 
     // Define strict response schema using Type enum
     const responseSchema = {
@@ -104,7 +110,7 @@ Output must be valid JSON matching the schema.
     let text = '';
     try {
       const response = await this.ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model,
         contents: fullPrompt,
         config: {
           temperature: 0.7,
@@ -112,6 +118,8 @@ Output must be valid JSON matching the schema.
           responseSchema,
         },
       });
+
+      console.log("Using model: ", model)
 
       text = response.text ?? '';
 
