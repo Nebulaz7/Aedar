@@ -43,7 +43,7 @@ Building software ideas often starts messy — scattered notes, vague goals, and
 | **AI**       | OpenAI API (chat + roadmap generation)    |
 | **MCP**      | Custom MCP servers (Calendar, Meet)       |
 | **Infra**    | Render (backend), Vercel (frontend)       |
-| **Other**    | TypeScript, ESM, Turbo monorepo           |
+| **Other**    | TypeScript          |
 
 ---
 
