@@ -125,7 +125,7 @@ const PhaseItem: React.FC<{
                     className="inline-flex items-center text-black gap-1 px-3 py-1 bg-white border-2 border-black text-xs font-bold hover:bg-emerald-100 transition-colors"
                   >
                     <span className="text-black/50">{resource.type}:</span>
-                    <span>{resource.title}</span>
+                    <span className="text-emerald-600">{resource.title}</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 ))}
@@ -239,7 +239,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({
 
           <button
             onClick={onModifyPlan}
-            className="flex-1 flex items-center cursor-pointer justify-center gap-2 px-6 py-3 bg-white border-3 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="flex-1 flex items-center text-black cursor-pointer justify-center gap-2 px-6 py-3 bg-white border-3 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <Edit3 className="w-5 h-5" />
             Modify Plan
