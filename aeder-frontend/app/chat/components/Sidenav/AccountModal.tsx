@@ -127,52 +127,53 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
       <div
         ref={modalRef}
-        className="bg-gray-900/90 backdrop-blur-md border border-sky-900/30 rounded-lg w-full max-w-md p-6 shadow-2xl shadow-blue-900/20 transform transition-all animate-fade-in"
+        className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-md p-6"
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-white">Account</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-black text-black uppercase">Account</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="p-1 hover:bg-gray-100 transition-colors"
             aria-label="Close"
           >
-            <X size={20} />
+            <X size={20} className="text-black" />
           </button>
         </div>
 
+        <div className="w-full h-1 bg-black mb-6"></div>
+
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <span className="animate-spin text-sky-400 mb-4">
-              <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8z"
-                ></path>
-              </svg>
-            </span>
-            <p className="text-gray-400 text-sm">Loading user data...</p>
+            <div className="flex gap-2 mb-4">
+              <div
+                className="w-3 h-3 bg-emerald-400 border-2 border-black animate-bounce"
+                style={{ animationDelay: "0ms" }}
+              />
+              <div
+                className="w-3 h-3 bg-yellow-300 border-2 border-black animate-bounce"
+                style={{ animationDelay: "150ms" }}
+              />
+              <div
+                className="w-3 h-3 bg-pink-400 border-2 border-black animate-bounce"
+                style={{ animationDelay: "300ms" }}
+              />
+            </div>
+            <p className="text-black/60 text-sm font-medium">
+              Loading user data...
+            </p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
-              <X className="w-8 h-8 text-red-400" />
+            <div className="w-16 h-16 bg-red-100 border-3 border-black flex items-center justify-center mb-4">
+              <X className="w-8 h-8 text-red-500" />
             </div>
-            <p className="text-red-400 text-sm text-center mb-4">
+            <p className="text-red-600 text-sm text-center mb-2 font-bold">
               Failed to load user data
             </p>
-            <p className="text-gray-500 text-xs text-center">{error}</p>
+            <p className="text-black/50 text-xs text-center">{error}</p>
           </div>
         ) : userInfo ? (
           <>
@@ -188,40 +189,46 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
                     alt={userInfo.name}
                     width={96}
                     height={96}
-                    className="w-24 h-24 rounded-full object-cover border-2 border-sky-500/30"
+                    className="w-24 h-24 object-cover border-4 border-black"
                     onError={() => setAvatarError(true)}
                     unoptimized
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-sky-600 to-indigo-700 flex items-center justify-center text-white text-2xl font-semibold border-2 border-sky-500/30">
+                  <div className="w-24 h-24 bg-emerald-400 border-4 border-black flex items-center justify-center text-black text-2xl font-black">
                     {getInitials(userInfo.name)}
                   </div>
                 )}
               </div>
 
               <div className="mt-4 text-center">
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-black text-black">
                   {userInfo.name}
                 </h3>
               </div>
             </div>
 
-            <div className="space-y-4 mb-6">
-              <div className="flex items-center gap-3 px-4 py-3 rounded-md bg-sky-950/30 border border-sky-900/30">
-                <Mail size={18} className="text-sky-400" />
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 border-3 border-black">
+                <Mail size={18} className="text-emerald-600" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-400">Email</p>
-                  <p className="text-sm text-white truncate">
+                  <p className="text-xs text-black/50 font-bold uppercase">
+                    Email
+                  </p>
+                  <p className="text-sm text-black font-medium truncate">
                     {userInfo.email}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 px-4 py-3 rounded-md bg-sky-950/30 border border-sky-900/30">
-                <Calendar size={18} className="text-sky-400" />
+              <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 border-3 border-black">
+                <Calendar size={18} className="text-emerald-600" />
                 <div>
-                  <p className="text-xs text-gray-400">Joined</p>
-                  <p className="text-sm text-white">{userInfo.joined}</p>
+                  <p className="text-xs text-black/50 font-bold uppercase">
+                    Joined
+                  </p>
+                  <p className="text-sm text-black font-medium">
+                    {userInfo.joined}
+                  </p>
                 </div>
               </div>
             </div>

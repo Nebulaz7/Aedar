@@ -72,36 +72,40 @@ const SignoutModal: React.FC<SignoutModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
       <div
         ref={modalRef}
-        className="bg-gray-900/90 backdrop-blur-md border border-sky-900/30 rounded-lg w-full max-w-md p-6 shadow-2xl shadow-blue-900/20 transform transition-all animate-fade-in"
+        className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-md p-6"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-white">Sign Out</h2>
+          <h2 className="text-xl font-black text-black uppercase">Sign Out</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="p-1 hover:bg-gray-100 transition-colors"
             aria-label="Close"
           >
-            <X size={20} />
+            <X size={20} className="text-black" />
           </button>
         </div>
 
+        <div className="w-full h-1 bg-black mb-6"></div>
+
         <div className="mb-6">
-          <p className="text-gray-300">Are you sure you want to sign out?</p>
+          <p className="text-black font-medium">
+            Are you sure you want to sign out?
+          </p>
         </div>
 
         <div className="flex space-x-3 justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-md border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 bg-white border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             Cancel
           </button>
           <button
             onClick={handleSignOut}
-            className="px-4 py-2 rounded-md bg-red-600/80 hover:bg-red-600 text-white transition-colors"
+            className="px-4 py-2 bg-red-500 border-3 border-black font-bold text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             Sign Out
           </button>

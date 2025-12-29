@@ -126,31 +126,34 @@ const Sidenav: React.FC<SidenavProps> = ({
 
   return (
     <>
-      {/* ☰ Mobile Menu Button */}
+      {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileSidenav}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 rounded-full bg-gray-800/50 backdrop-blur-md text-white hover:bg-gray-700/60 transition-colors"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
         aria-label="Toggle navigation menu"
       >
-        <Menu size={20} />
+        <Menu size={20} className="text-black" />
       </button>
 
-      {/* 📚 Sidebar */}
+      {/* Sidebar */}
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`fixed rounded-tr-3xl top-0 left-0 h-full z-40 transition-all duration-300 
+        className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 
           ${isExpanded ? "w-64" : "w-16"} 
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-          bg-gradient-to-r from-white/5 via-white/5 to-white/5 
-          backdrop-blur-xl shadow-2xl shadow-black/10 border-r border-sky-900/30
+          ${
+            isMobileOpen
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0"
+          }
+          bg-white border-r-4 border-black
           ${isMobileOpen ? "w-3/4 sm:w-64" : ""}`}
       >
         <div className="flex flex-col h-full">
           {/* Expand/Collapse Button */}
           <button
             onClick={toggleExpanded}
-            className="hidden lg:flex self-end p-2 m-2 rounded-full hover:bg-sky-800/20 text-sky-400"
+            className="hidden lg:flex self-end p-2 m-2 hover:bg-emerald-100 text-black transition-colors"
           >
             {isExpanded ? (
               <ChevronLeft size={16} />
@@ -163,47 +166,48 @@ const Sidenav: React.FC<SidenavProps> = ({
           {isMobileOpen && (
             <button
               onClick={toggleMobileSidenav}
-              className="lg:hidden self-end p-2 m-2 rounded-full hover:bg-sky-800/20 text-sky-400"
+              className="lg:hidden self-end p-2 m-2 hover:bg-emerald-100 text-black transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
           )}
 
-          {/* 🆕 New Roadmap Button */}
+          {/* New Roadmap Button */}
           <div className="px-3 py-2">
             <Link
               href="/chat"
-              className={`flex items-center rounded-lg px-3 py-2 bg-sky-600/20 hover:bg-sky-600/30 
-                border border-sky-500/30 transition-all duration-200 
+              className={`flex items-center px-3 py-2 bg-emerald-400 border-3 border-black
+                shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
+                hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold
                 ${isExpanded ? "justify-start" : "justify-center"}`}
             >
-              <MessageSquare size={18} className="text-sky-400" />
+              <MessageSquare size={18} className="text-black" />
               {isExpanded && (
-                <span className="ml-3 text-sm text-sky-300 font-medium">
-                  New Roadmap
-                </span>
+                <span className="ml-3 text-sm text-black">New Roadmap</span>
               )}
             </Link>
           </div>
 
-          {/* 📜 Roadmap History */}
+          {/* Roadmap History */}
           <div className="flex-1 overflow-y-auto">
             <div className={`px-3 py-2 ${isExpanded ? "block" : "hidden"}`}>
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-black/50 uppercase tracking-wider">
                 Roadmap History
               </h3>
             </div>
 
             {!isExpanded && (
               <div className="flex justify-center py-2">
-                <Clock size={20} className="text-gray-500" />
+                <Clock size={20} className="text-black/40" />
               </div>
             )}
 
             <div className="space-y-1 px-2">
               {isLoading ? (
                 <div
-                  className={`text-gray-400 text-xs italic px-3 ${isExpanded ? "block" : "hidden"}`}
+                  className={`text-black/50 text-xs italic px-3 ${
+                    isExpanded ? "block" : "hidden"
+                  }`}
                 >
                   Loading...
                 </div>
@@ -212,25 +216,29 @@ const Sidenav: React.FC<SidenavProps> = ({
                   <Link
                     key={roadmap.id}
                     href={`/roadmap/${roadmap.id}`}
-                    className={`flex items-center rounded-md px-2 py-2 w-full text-left
-                      transition-all duration-200 group
+                    className={`flex items-center px-2 py-2 w-full text-left
+                      transition-all duration-150 group border-2
                       ${
                         currentRoadmapId === roadmap.id
-                          ? "bg-sky-800/30 text-sky-300 border border-sky-500/30"
-                          : "text-gray-300 hover:bg-sky-800/20 hover:text-white"
+                          ? "bg-emerald-100 border-black text-black font-bold"
+                          : "bg-white border-transparent hover:border-black hover:bg-gray-50 text-black"
                       }
                       ${isExpanded ? "justify-start" : "justify-center"}`}
                   >
                     <MessageSquare
                       size={16}
-                      className={`${currentRoadmapId === roadmap.id ? "text-sky-400" : "text-gray-500 group-hover:text-sky-400"}`}
+                      className={`${
+                        currentRoadmapId === roadmap.id
+                          ? "text-emerald-600"
+                          : "text-black/40 group-hover:text-black"
+                      }`}
                     />
                     {isExpanded && (
                       <div className="ml-3 flex-1 min-w-0">
                         <div className="text-sm font-medium truncate">
                           {truncateTitle(roadmap.title)}
                         </div>
-                        <div className="text-xs text-gray-500 mt-0.5">
+                        <div className="text-xs text-black/50 mt-0.5">
                           {formatDate(roadmap.created_at)}
                         </div>
                       </div>
@@ -239,7 +247,7 @@ const Sidenav: React.FC<SidenavProps> = ({
                 ))
               ) : (
                 <div
-                  className={`px-2 py-2 text-gray-500 text-xs italic ${
+                  className={`px-2 py-2 text-black/50 text-xs italic ${
                     isExpanded ? "block" : "hidden"
                   }`}
                 >
@@ -249,42 +257,48 @@ const Sidenav: React.FC<SidenavProps> = ({
             </div>
           </div>
 
-          {/* ⚙️ User Actions */}
-          <div className="p-2 border-t border-sky-900/30">
+          {/* User Actions */}
+          <div className="p-2 border-t-2 border-black/10">
             <button
               onClick={() => setShowAccountModal(true)}
-              className={`flex items-center rounded-md px-2 py-2 w-full text-left
-                text-white hover:bg-sky-800/20 transition-colors mb-1
+              className={`flex items-center px-2 py-2 w-full text-left
+                text-black hover:bg-emerald-100 transition-colors mb-1
                 ${isExpanded ? "justify-start" : "justify-center"}`}
             >
-              <User size={18} className="text-sky-400" />
-              {isExpanded && <span className="ml-3 text-sm">Account</span>}
+              <User size={18} className="text-black/60" />
+              {isExpanded && (
+                <span className="ml-3 text-sm font-medium">Account</span>
+              )}
             </button>
 
             <button
               onClick={() => setShowSettingsModal(true)}
-              className={`flex items-center rounded-md px-2 py-2 w-full text-left
-                text-white hover:bg-sky-800/20 transition-colors mb-1
+              className={`flex items-center px-2 py-2 w-full text-left
+                text-black hover:bg-emerald-100 transition-colors mb-1
                 ${isExpanded ? "justify-start" : "justify-center"}`}
             >
-              <Settings size={18} className="text-sky-400" />
-              {isExpanded && <span className="ml-3 text-sm">Settings</span>}
+              <Settings size={18} className="text-black/60" />
+              {isExpanded && (
+                <span className="ml-3 text-sm font-medium">Settings</span>
+              )}
             </button>
 
             <button
               onClick={() => setShowSignoutModal(true)}
-              className={`flex items-center rounded-md px-2 py-2 w-full text-left
-                text-white hover:bg-red-800/20 hover:text-red-400 transition-colors
+              className={`flex items-center px-2 py-2 w-full text-left
+                text-red-600 hover:bg-red-100 transition-colors
                 ${isExpanded ? "justify-start" : "justify-center"}`}
             >
-              <LogOut size={18} className="text-red-400" />
-              {isExpanded && <span className="ml-3 text-sm">Sign out</span>}
+              <LogOut size={18} className="text-red-500" />
+              {isExpanded && (
+                <span className="ml-3 text-sm font-medium">Sign out</span>
+              )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* 💬 Modals */}
+      {/* Modals */}
       {showSignoutModal && (
         <SignoutModal
           isOpen={showSignoutModal}
@@ -310,10 +324,10 @@ const Sidenav: React.FC<SidenavProps> = ({
         />
       )}
 
-      {/* 🌓 Mobile backdrop */}
+      {/* Mobile backdrop */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/30 z-30 lg:hidden"
           onClick={toggleMobileSidenav}
           aria-hidden="true"
         />

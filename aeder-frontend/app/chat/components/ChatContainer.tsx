@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import ChatInput from "./ChatInput";
-import RoadmapDisplay from "./RoadmapDisplay";
-import SuggestionPill from "./SuggestionPill";
+import RoadmapCard from "./RoadmapCard";
+import ZeroState from "./ZeroState";
+import ControlBar from "./ControlBar";
+import LoadingState from "./LoadingState";
 import { useRouter } from "next/navigation";
 
 // Define types for the API response
@@ -16,12 +18,14 @@ type Node = {
   id: string | number;
   title: string;
   description: string;
+  duration?: string;
   resources: Resource[];
 };
 
 type Stage = {
   id: string | number;
   title: string;
+  duration?: string;
   nodes: Node[];
 };
 
@@ -30,16 +34,23 @@ type RoadmapData = Stage[] | string | null;
 type ChatContainerProps = {
   userId: string;
   roadmapId?: string | null;
+  userName?: string;
 };
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ userId, roadmapId }) => {
+const ChatContainer: React.FC<ChatContainerProps> = ({
+  userId,
+  roadmapId,
+  userName = "there",
+}) => {
   const [loading, setLoading] = useState(false);
   const [roadmap, setRoadmap] = useState<RoadmapData>(null);
+  const [roadmapTitle, setRoadmapTitle] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [particles, setParticles] = useState<
-    { left: string; top: string; duration: string }[]
-  >([]);
+  const [planningDepth, setPlanningDepth] = useState<
+    "sprint" | "standard" | "architect"
+  >("standard");
+  const [autoSchedule, setAutoSchedule] = useState(false);
+  const [isCalendarConnected, setIsCalendarConnected] = useState(false);
   const router = useRouter();
 
   // Load existing roadmap if roadmapId is provided
@@ -49,76 +60,52 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, roadmapId }) => {
 
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/roadmap/${roadmapId}?userId=${userId}`
+          `${
+            process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+          }/roadmap/${roadmapId}?userId=${userId}`
         );
         if (res.ok) {
           const data = await res.json();
           setRoadmap(data.roadmap);
+          setRoadmapTitle(data.title || "Your Roadmap");
         } else {
-          console.error("❌ Error loading roadmap:", res.statusText);
-          setRoadmap("⚠️ Couldn't load roadmap");
+          console.error("Error loading roadmap:", res.statusText);
+          setRoadmap("Could not load roadmap. Please try again.");
         }
       } catch (err) {
-        console.error("❌ Error loading roadmap:", err);
-        setRoadmap("⚠️ Couldn't load roadmap");
+        console.error("Error loading roadmap:", err);
+        setRoadmap("Could not load roadmap. Please try again.");
       }
     };
 
     fetchRoadmap();
   }, [roadmapId, userId]);
 
-  // Handle window load and mouse movement effects
   useEffect(() => {
     setIsLoaded(true);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    // Generate particles after mount only (no mismatch with SSR)
-    const generated = Array.from({ length: 6 }).map(() => ({
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      duration: `${3 + Math.random() * 2}s`,
-    }));
-    setParticles(generated);
-
-    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
-
-  // Example suggestions
-  const suggestions = [
-    "Generate a roadmap for a frontend developer",
-    "Learn machine learning in 6 months",
-    "How to escape sapa in just 3 months",
-    "How can I lose body fat in 6 Months",
-  ];
 
   // Handle sending messages to the API
   const handleSendMessage = async (message: string) => {
     setLoading(true);
+    setRoadmapTitle(message);
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userMessage: message }),
+        body: JSON.stringify({
+          userMessage: message,
+          planningDepth,
+        }),
       });
 
       const data = await res.json();
-      console.log("Full API response:", data);
 
-      // Set the new roadmap
       if (data.roadmap) {
-        console.log("Setting roadmap to:", data.roadmap);
         setRoadmap(data.roadmap);
 
-        // Save the NEW roadmap to history
+        // Save the roadmap
         try {
           const saveRes = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/roadmap`,
@@ -136,149 +123,96 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, roadmapId }) => {
 
           if (saveRes.ok) {
             const savedRoadmap = await saveRes.json();
-            console.log("✅ Roadmap saved:", savedRoadmap);
-
-            // Redirect to the new roadmap page
             router.push(`/roadmap/${savedRoadmap.id}`);
-          } else {
-            console.error("❌ Failed to save roadmap:", saveRes.statusText);
           }
         } catch (saveErr) {
-          console.error("❌ Error saving roadmap:", saveErr);
+          console.error("Error saving roadmap:", saveErr);
         }
       } else if (data.error) {
-        console.log("API returned error:", data.error);
         setRoadmap(data.error);
       } else {
-        console.log("No roadmap or error in response");
-        setRoadmap("⚠️ No roadmap received. Try another query.");
+        setRoadmap("No roadmap received. Try another query.");
       }
     } catch (err) {
-      console.error("❌ Error:", err);
-      setRoadmap("❌ Failed to fetch roadmap. Try again.");
+      console.error("Error:", err);
+      setRoadmap("Failed to fetch roadmap. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle clicking on a suggestion pill
   const handleSuggestionClick = (suggestion: string) => {
     handleSendMessage(suggestion);
   };
 
+  const handleAddToCalendar = async () => {
+    // TODO: Implement calendar integration
+    console.log("Adding to calendar...");
+  };
+
+  const handleModifyPlan = () => {
+    // Clear roadmap to show input again
+    setRoadmap(null);
+  };
+
+  const handleConnectCalendar = () => {
+    // TODO: Implement Google Calendar OAuth
+    console.log("Connecting calendar...");
+  };
+
   return (
-    <div
-      className="min-h-screen w-full text-white font-proxima overflow-y-auto"
-      style={{
-        background: `
-          radial-gradient(ellipse at top left, rgba(14, 165, 233, 0.2) 0%, transparent 50%),
-          radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-          radial-gradient(ellipse at bottom, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
-          linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0a0a0a 100%)
-        `,
-      }}
-    >
-      {/* Interactive cursor glow */}
-      <div
-        className="fixed pointer-events-none w-96 h-96 rounded-full opacity-20 blur-3xl transition-all duration-500"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%)",
-          left: `${mousePosition.x * 100}%`,
-          top: `${mousePosition.y * 100}%`,
-          transform: "translate(-50%, -50%)",
-        }}
+    <div className="min-h-screen w-full bg-[#f5f5f5] flex flex-col">
+      {/* Control Bar */}
+      <ControlBar
+        onDepthChange={setPlanningDepth}
+        onAutoScheduleChange={setAutoSchedule}
+        isCalendarConnected={isCalendarConnected}
+        onConnectCalendar={handleConnectCalendar}
       />
 
-      {/* Animated background particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {particles.map((pos, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-sky-400/10 rounded-full animate-pulse"
-            style={{
-              left: pos.left,
-              top: pos.top,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: pos.duration,
-            }}
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center px-4 py-8 overflow-y-auto">
+        {/* Decorative Elements */}
+        <div className="fixed top-40 left-10 w-16 h-16 bg-emerald-400 border-3 border-black rotate-12 opacity-50 hidden xl:block" />
+        <div className="fixed bottom-20 right-10 w-12 h-12 bg-yellow-300 border-3 border-black -rotate-6 opacity-50 hidden xl:block" />
+        <div className="fixed top-1/3 right-20 w-8 h-8 bg-pink-400 border-3 border-black rounded-full opacity-50 hidden xl:block" />
+
+        {/* Loading State */}
+        {loading && <LoadingState />}
+
+        {/* Zero State - Show when no roadmap */}
+        {!loading && !roadmap && (
+          <ZeroState
+            userName={userName}
+            onSuggestionClick={handleSuggestionClick}
           />
-        ))}
-      </div>
+        )}
 
-      <main className="flex flex-col items-center justify-center min-h-screen pt-20 px-4 text-center relative z-10">
-        {/* Heading */}
-        <div
-          className={`mb-8 space-y-3 transition-all duration-1000 ${
-            isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
-          <h1 className="text-3xl lg:text-4xl font-bold leading-tight bg-gradient-to-r from-white to-white bg-clip-text text-transparent">
-            What do you want to plan?
-          </h1>
-          <p
-            className={`text-[16px] text-[#BFC1C2] transition-all duration-1000 delay-300 ${
-              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            Generate personalized roadmaps Journeys with Rave AI.
-          </p>
-        </div>
-
-        {/* Input */}
-        <div
-          className={`w-full max-w-2xl mb-8 transition-all duration-1000 delay-500 ${
-            isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
-          <ChatInput onSendMessage={handleSendMessage} isLoading={loading} />
-        </div>
-
-        {/* Roadmap results (when available) */}
-        {roadmap && (
-          <div
-            className={`w-full max-w-3xl mb-8 transition-all duration-500 ${
-              loading ? "opacity-50" : "opacity-100"
-            }`}
-          >
-            <RoadmapDisplay roadmap={roadmap} />
+        {/* Roadmap Display */}
+        {!loading && roadmap && typeof roadmap !== "string" && (
+          <div className="w-full max-w-4xl mb-8">
+            <RoadmapCard
+              title={roadmapTitle}
+              stages={roadmap}
+              onAddToCalendar={handleAddToCalendar}
+              onModifyPlan={handleModifyPlan}
+            />
           </div>
         )}
 
-        {/* Suggestion Pills (show only when no roadmap is displayed) */}
-        {!roadmap && (
-          <div
-            className={`flex flex-wrap gap-3 justify-center max-w-2xl transition-all duration-1000 delay-700 ${
-              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
-          >
-            {suggestions.map((text, index) => (
-              <SuggestionPill
-                key={text}
-                text={text}
-                onClick={handleSuggestionClick}
-                index={index}
-                isLoaded={isLoaded}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Footer Tip (show only when no roadmap is displayed) */}
-        {!roadmap && (
-          <div
-            className={`mt-8 flex flex-col items-center gap-2 text-xs text-gray-500 transition-all duration-1000 delay-1000 justify-center ${
-              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-sky-400 rounded-full animate-pulse" />
-              <span>Start typing to begin your personalized journey</span>
+        {/* Error State */}
+        {!loading && typeof roadmap === "string" && (
+          <div className="w-full max-w-2xl mb-8">
+            <div className="bg-white border-4 border-black p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <p className="text-black font-medium text-center">{roadmap}</p>
             </div>
           </div>
         )}
 
-        <div className="h-24" />
+        {/* Input Area - Always visible at bottom */}
+        <div className="w-full max-w-3xl mt-auto pt-8">
+          <ChatInput onSendMessage={handleSendMessage} isLoading={loading} />
+        </div>
       </main>
     </div>
   );

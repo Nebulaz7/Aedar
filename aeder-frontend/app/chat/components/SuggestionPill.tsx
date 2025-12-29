@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { ArrowRight } from "lucide-react";
 
 interface SuggestionPillProps {
   text: string;
@@ -18,21 +19,22 @@ const SuggestionPill: React.FC<SuggestionPillProps> = ({
     <button
       onClick={() => onClick(text)}
       className={`
-        group px-6 py-3 
-        bg-white/5 hover:bg-sky-500/10 
-        border border-white/10 hover:border-sky-400/50 
-        rounded-full text-sm text-gray-300 hover:text-white 
-        transition-all duration-300 shadow-lg 
-        hover:shadow-sky-500/30 hover:-translate-y-1 
-        backdrop-blur-sm whitespace-nowrap flex-shrink-0
-        ${isLoaded ? "animate-none" : "animate-pulse"}
+        group flex items-center gap-2 px-5 py-3
+        bg-white border-3 border-black
+        font-bold text-sm text-black
+        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+        hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
+        hover:translate-x-[2px] hover:translate-y-[2px]
+        hover:bg-emerald-100
+        transition-all duration-150
+        ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
       `}
       style={{
-        animationDelay: `${index * 0.1}s`,
+        transitionDelay: `${index * 100}ms`,
       }}
     >
-      <span className="relative z-10">{text}</span>
-      <div className="absolute inset-0 bg-gradient-to-r from-sky-500/0 to-sky-500/0 group-hover:from-sky-500/10 group-hover:to-indigo-500/10 rounded-full transition-all duration-300" />
+      <span>{text}</span>
+      <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
     </button>
   );
 };
