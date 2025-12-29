@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI, Type } from '@google/genai';
 import { buildRoadmapPrompt } from '../../utils/index';
 import { ParsedRoadmap } from '../../types/index';
 import { GoalPreprocessorService } from '../preprocessor/goal-preprocessor.service';
@@ -12,56 +12,45 @@ export interface RoadmapResponse {
 
 @Injectable()
 export class ChatService {
-  private genAI: GoogleGenerativeAI;
-  private model;
+  private ai: GoogleGenAI;
 
   constructor(private readonly goalPreprocessor: GoalPreprocessorService) {
-    this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
-    // Use 'gemini-1.5-flash' for speed/cost, or 'gemini-1.5-pro' for better reasoning
-    this.model = this.genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash', // or 'gemini-1.5-pro'
-      generationConfig: {
-        temperature: 0.7,
-        responseMimeType: 'application/json', // Critical: forces JSON output
-      },
-      // Optional: Add safety settings if needed
-      // safetySettings: [...],
-    });
+    this.ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_API_KEY! });
   }
 
   async generateRoadmap(userMessage: string): Promise<RoadmapResponse> {
     const { goal, known, experienceLevel } = await this.goalPreprocessor.preprocess(userMessage);
     const prompt = buildRoadmapPrompt(goal, known, experienceLevel);
 
-    // Define strict response schema for reliable parsing
+    // Define strict response schema using Type enum
     const responseSchema = {
-      type: 'object',
+      type: Type.OBJECT,
       properties: {
         roadmap: {
-          type: 'array',
+          type: Type.ARRAY,
           items: {
-            type: 'object',
+            type: Type.OBJECT,
             properties: {
-              id: { type: 'string' },
-              title: { type: 'string' },
-              description: { type: 'string' },
+              id: { type: Type.STRING },
+              title: { type: Type.STRING },
+              description: { type: Type.STRING },
               nodes: {
-                type: 'array',
+                type: Type.ARRAY,
                 items: {
-                  type: 'object',
+                  type: Type.OBJECT,
                   properties: {
-                    id: { type: 'string' },
-                    title: { type: 'string' },
-                    description: { type: 'string' },
+                    id: { type: Type.STRING },
+                    title: { type: Type.STRING },
+                    description: { type: Type.STRING },
                     resources: {
-                      type: 'array',
+                      type: Type.ARRAY,
                       items: {
-                        type: 'object',
+                        type: Type.OBJECT,
                         properties: {
-                          type: { type: 'string' },
-                          title: { type: 'string' },
-                          link: { type: 'string' },
-                          description: { type: 'string' },
+                          type: { type: Type.STRING },
+                          title: { type: Type.STRING },
+                          link: { type: Type.STRING },
+                          description: { type: Type.STRING },
                         },
                         required: ['type', 'title', 'link', 'description'],
                       },
@@ -74,8 +63,11 @@ export class ChatService {
             required: ['id', 'title', 'description', 'nodes'],
           },
         },
-        triggerCalendar: { type: 'boolean' },
-        calendarIntentReason: { type: ['string', 'null'] },
+        triggerCalendar: { type: Type.BOOLEAN },
+        calendarIntentReason: { 
+          type: Type.STRING,
+          nullable: true,
+        },
       },
       required: ['roadmap', 'triggerCalendar'],
     };
@@ -109,16 +101,19 @@ ROADMAP GUIDELINES:
 Output must be valid JSON matching the schema.
 `.trim();
 
+    let text = '';
     try {
-      const result = await this.model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
-        generationConfig: {
-          responseSchema, // Enforces structure
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: fullPrompt,
+        config: {
+          temperature: 0.7,
+          responseMimeType: 'application/json',
+          responseSchema,
         },
       });
 
-      const response = result.response;
-      const text = response.text();
+      text = response.text ?? '';
 
       if (!text) {
         throw new Error('Empty response from Gemini');
@@ -135,18 +130,18 @@ Output must be valid JSON matching the schema.
       console.error('Gemini generation failed:', err.message);
       console.error('Raw output (if any):', err?.response?.text?.());
 
-      // Fallback: attempt to extract roadmap array if possible
       try {
-        const fallbackMatch = text.match(/\[[\s\S]*\]/);
-        if (fallbackMatch) {
-          const roadmap = JSON.parse(fallbackMatch[0]);
-          return {
-            roadmap,
-            shouldTriggerCalendar: false,
-          };
+        if (text) {
+          const fallbackMatch = text.match(/\[[\s\S]*\]/);
+          if (fallbackMatch) {
+            const roadmap = JSON.parse(fallbackMatch[0]);
+            return {
+              roadmap,
+              shouldTriggerCalendar: false,
+            };
+          }
         }
       } catch (fallbackErr) {
-        // ignore
       }
 
       throw new Error(`Failed to generate or parse roadmap: ${err.message}`);

@@ -18,12 +18,16 @@ export class RoadmapService {
   }
 
   async findAllByUser(userId: string) {
+    console.log('Finding roadmaps for userId:', userId);
+
     const client = this.supabaseService.getClient();
     const { data, error } = await client
       .from('roadmaps')
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
+
+    console.log('Query result:', { data, error });
 
     if (error) throw new Error(error.message);
     return data;

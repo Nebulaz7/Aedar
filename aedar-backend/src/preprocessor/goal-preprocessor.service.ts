@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI, Type } from '@google/genai';
 
 export interface PreprocessedGoal {
   goal: string;
@@ -12,44 +12,40 @@ export interface PreprocessedGoal {
 
 @Injectable()
 export class GoalPreprocessorService {
-  private genAI: GoogleGenerativeAI;
-  private model;
+  private ai: GoogleGenAI;
 
   constructor() {
-    this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
-
-    this.model = this.genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash', // Fast, cheap, excellent at structured tasks
-      // You can switch to 'gemini-1.5-pro' if you need even better reasoning
-      generationConfig: {
-        temperature: 0.2,
-        responseMimeType: 'application/json', // Enforce JSON output
-      },
-    });
+    this.ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_API_KEY! });
   }
 
   async preprocess(message: string): Promise<PreprocessedGoal> {
-    // Define strict schema for reliable, parse-safe output
+    // Define strict schema using Type enum
     const responseSchema = {
-      type: 'object',
+      type: Type.OBJECT,
       properties: {
-        goal: { type: 'string' },
+        goal: { type: Type.STRING },
         known: {
-          type: 'array',
-          items: { type: 'string' },
+          type: Type.ARRAY,
+          items: { type: Type.STRING },
         },
         experienceLevel: {
-          type: ['string', 'null'],
-          enum: ['beginner', 'intermediate', 'advanced', null],
+          type: Type.STRING,
+          nullable: true,
+          enum: ['beginner', 'intermediate', 'advanced'],
         },
         formatPreference: {
-          type: ['string', 'null'],
-          enum: ['video', 'article', 'project', 'mixed', null],
+          type: Type.STRING,
+          nullable: true,
+          enum: ['video', 'article', 'project', 'mixed'],
         },
-        timeframe: { type: ['string', 'null'] },
+        timeframe: { 
+          type: Type.STRING,
+          nullable: true,
+        },
         specificFocus: {
-          type: ['array', 'null'],
-          items: { type: 'string' },
+          type: Type.ARRAY,
+          nullable: true,
+          items: { type: Type.STRING },
         },
       },
       required: ['goal', 'known'],
@@ -84,15 +80,17 @@ Respond with valid JSON only, matching the schema exactly.
 `.trim();
 
     try {
-      const result = await this.model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: {
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          temperature: 0.2,
+          responseMimeType: 'application/json',
           responseSchema,
         },
       });
 
-      const response = result.response;
-      const text = response.text();
+      const text = response.text ?? '';
 
       if (!text) {
         throw new Error('Empty response from Gemini');
@@ -100,7 +98,6 @@ Respond with valid JSON only, matching the schema exactly.
 
       const parsed = JSON.parse(text);
 
-      // Normalize optional fields
       return {
         goal: parsed.goal,
         known: parsed.known || [],
@@ -113,7 +110,6 @@ Respond with valid JSON only, matching the schema exactly.
       console.error('Gemini preprocessing failed:', err.message);
       console.error('Raw output (if any):', err?.response?.text?.());
 
-      // Optional: Add fallback logic here if needed
       throw new Error(`Failed to preprocess goal with Gemini: ${err.message}`);
     }
   }
