@@ -111,7 +111,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
 
   return (
     <div className="w-full bg-white border-b-4 border-black px-4 py-3">
-      <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div className="max-w-4xl mx-30 flex flex-wrap items-center justify-between gap-4">
         {/* Logo */}
         <div className="flex items-center gap-2">
           <Link

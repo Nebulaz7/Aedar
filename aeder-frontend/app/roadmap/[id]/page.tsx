@@ -340,7 +340,7 @@ export default function RoadmapPage() {
                     <Calendar className="w-4 h-4" />
                     {formatDate(roadmap.created_at)}
                   </span>
-                  <span className="flex cursor-pointer text-black items-center gap-1">
+                  <span className="flex cursor-pointer items-center gap-1">
                     {roadmap.is_public ? (
                       <>
                         <Globe className="w-4 h-4 text-emerald-600" />
@@ -350,8 +350,8 @@ export default function RoadmapPage() {
                       </>
                     ) : (
                       <>
-                        <Lock className="w-4 h-4" />
-                        <span>Private</span>
+                        <Lock className="w-4 h-4 text-black" />
+                        <span className="text-black">Private</span>
                       </>
                     )}
                   </span>
