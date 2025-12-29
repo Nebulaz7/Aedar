@@ -4,12 +4,10 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
-  Share2,
   Trash2,
   Globe,
   Lock,
   Calendar,
-  Clock,
   Loader2,
   AlertCircle,
   Copy,
@@ -17,6 +15,7 @@ import {
   Home,
 } from "lucide-react";
 import RoadmapCard from "../../chat/components/RoadmapCard";
+import { createBrowserClient } from "@supabase/ssr";
 
 interface Resource {
   type: string;
@@ -59,6 +58,7 @@ export default function RoadmapPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userLoaded, setUserLoaded] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [isTogglingPublic, setIsTogglingPublic] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -69,21 +69,23 @@ export default function RoadmapPage() {
   // Get current user
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const { createBrowserClient } = await import("@supabase/ssr");
-        const supabase = createBrowserClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          setUserId(user.id);
-        }
-      } catch (err) {
-        console.error("Error fetching user:", err);
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (!user || error) {
+        console.error("❌ No user found.");
+        setUserLoaded(true);
+        return;
       }
+
+      setUserId(user.id);
+      setUserLoaded(true);
     };
     fetchUser();
   }, []);
@@ -91,19 +93,16 @@ export default function RoadmapPage() {
   // Fetch roadmap data
   useEffect(() => {
     const fetchRoadmap = async () => {
-      if (!roadmapId) return;
+      if (!roadmapId || !userLoaded) return;
 
       setLoading(true);
       setError(null);
 
       try {
-        const url = userId
-          ? `${
-              process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
-            }/roadmap/${roadmapId}?userId=${userId}`
-          : `${
-              process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
-            }/roadmap/${roadmapId}?userId=anonymous`;
+        const baseUrl = `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+        }/roadmap/${roadmapId}`;
+        const url = userId ? `${baseUrl}?userId=${userId}` : baseUrl;
 
         const res = await fetch(url);
 
@@ -130,7 +129,7 @@ export default function RoadmapPage() {
     };
 
     fetchRoadmap();
-  }, [roadmapId, userId]);
+  }, [roadmapId, userId, userLoaded]);
 
   // Update isOwner when userId changes
   useEffect(() => {

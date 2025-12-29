@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { RoadmapService } from './roadmap.service';
 
 @Controller('roadmap')
@@ -17,8 +17,12 @@ export class RoadmapController {
   }
 
   @Get(':id')
-  async getOne(@Param('id') id: string, @Query('userId') userId: string) {
-    return this.roadmapService.findOne(id, userId);
+  async getOne(@Param('id') id: string, @Query('userId') userId?: string) {
+    const roadmap = await this.roadmapService.findOne(id, userId);
+    if (!roadmap) {
+      throw new NotFoundException('Roadmap not found');
+    }
+    return roadmap;
   }
 
   @Delete(':id')

@@ -33,14 +33,23 @@ export class RoadmapService {
     return data;
   }
 
-  async findOne(id: string, userId: string) {
+  async findOne(id: string, userId?: string) {
     const client = this.supabaseService.getClient();
-    const { data, error } = await client
+    
+    let query = client
       .from('roadmaps')
       .select('*')
-      .eq('id', id)
-      .or(`user_id.eq.${userId},is_public.eq.true`)
-      .maybeSingle();
+      .eq('id', id);
+
+    // If userId is provided, show their roadmaps or public ones
+    // If no userId, only show public roadmaps
+    if (userId) {
+      query = query.or(`user_id.eq.${userId},is_public.eq.true`);
+    } else {
+      query = query.eq('is_public', true);
+    }
+
+    const { data, error } = await query.maybeSingle();
 
     if (error) throw new Error(error.message);
     return data;
