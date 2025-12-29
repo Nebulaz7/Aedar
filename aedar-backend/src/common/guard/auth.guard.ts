@@ -14,7 +14,7 @@ export class SupabaseAuthGuard implements CanActivate {
   constructor() {
     this.supabase = createClient(
       process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SECRET_KEY! // not public anon key
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
   }
 

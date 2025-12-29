@@ -53,6 +53,27 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [isCalendarConnected, setIsCalendarConnected] = useState(false);
   const router = useRouter();
 
+  // Fetch user's calendar connection status from profile
+  useEffect(() => {
+    const fetchCalendarStatus = async () => {
+      if (!userId) return;
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/user/profile?userId=${userId}`
+        );
+        if (res.ok) {
+          const profile = await res.json();
+          setIsCalendarConnected(profile.calendar_connected || false);
+        }
+      } catch (err) {
+        console.error("Error fetching calendar status:", err);
+      }
+    };
+
+    fetchCalendarStatus();
+  }, [userId]);
+
   // Load existing roadmap if roadmapId is provided
   useEffect(() => {
     const fetchRoadmap = async () => {
@@ -155,11 +176,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     setRoadmap(null);
   };
 
-  const handleConnectCalendar = () => {
-    // TODO: Implement Google Calendar OAuth
-    console.log("Connecting calendar...");
-  };
-
   return (
     <div className="min-h-screen w-full bg-[#f5f5f5] flex flex-col">
       {/* Control Bar */}
@@ -167,7 +183,11 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         onDepthChange={setPlanningDepth}
         onAutoScheduleChange={setAutoSchedule}
         isCalendarConnected={isCalendarConnected}
-        onConnectCalendar={handleConnectCalendar}
+        user={{ id: userId }}
+        onCalendarConnected={() => {
+          console.log('Setting isCalendarConnected to true');
+          setIsCalendarConnected(true);
+        }}
       />
 
       {/* Main Content */}

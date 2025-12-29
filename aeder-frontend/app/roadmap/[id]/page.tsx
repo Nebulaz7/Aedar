@@ -201,12 +201,41 @@ export default function RoadmapPage() {
   };
 
   const handleAddToCalendar = async () => {
+    if (!roadmap || !userId) {
+      alert("Please sign in to add this roadmap to your calendar");
+      return;
+    }
+
     setIsAddingToCalendar(true);
-    // TODO: Implement calendar integration
-    setTimeout(() => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/mcp/calendar/execute`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            roadmap: roadmap.roadmap,
+            startDate: new Date().toISOString().split("T")[0], // Start from today
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert(`🎉 Added ${data.eventCount} events to your Google Calendar!`);
+      } else if (data.error?.includes("not connected")) {
+        alert("Please connect your Google Calendar first from the chat page.");
+      } else {
+        alert(data.error || "Failed to add to calendar. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error adding to calendar:", err);
+      alert("Failed to add to calendar. Please try again.");
+    } finally {
       setIsAddingToCalendar(false);
-      alert("Calendar integration coming soon!");
-    }, 1000);
+    }
   };
 
   const handleModifyPlan = () => {

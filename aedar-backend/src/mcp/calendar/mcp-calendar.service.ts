@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { google } from 'googleapis';
 import { ParsedRoadmap } from '../../../types/index';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 interface CalendarEvent {
   summary: string;
@@ -10,28 +11,49 @@ interface CalendarEvent {
   reminders?: { useDefault: boolean };
 }
 
+export interface CreatedEvent {
+  id?: string | null;
+  htmlLink?: string | null;
+  summary?: string | null;
+}
+
 @Injectable()
 export class McpCalendarService {
   private readonly logger = new Logger(McpCalendarService.name);
+  private supabase: SupabaseClient;
 
-  // In real app: fetch from DB using userId
-  private mockTokens = new Map<string, any>(); // userId → { access_token, refresh_token, expiry_date }
+  constructor() {
+    this.supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    );
+  }
 
   async addRoadmapToCalendar(
     userId: string,
     roadmap: ParsedRoadmap,
     options: {
       calendarId?: string;
-      startDate?: string; // ISO string, e.g., '2026-01-05'
+      startDate?: string;
       dryRun?: boolean;
     } = {},
   ) {
     const { calendarId = 'primary', startDate, dryRun = false } = options;
 
     try {
-      const oauth2Client = this.getAuthClient(userId);
-      if (!oauth2Client.credentials.access_token) {
-        return { success: false, error: 'No valid access token – calendar not connected' };
+      const tokens = await this.getTokensFromDb(userId);
+      if (!tokens) {
+        return { success: false, error: 'Calendar not connected – please connect your Google Calendar' };
+      }
+
+      const oauth2Client = this.createOAuthClient(tokens);
+      
+      // Auto-refresh if expired
+      if (tokens.expiry_date && tokens.expiry_date <= Date.now()) {
+        this.logger.log('Token expired – refreshing...');
+        const { credentials } = await oauth2Client.refreshAccessToken();
+        await this.saveTokensToDb(userId, credentials);
+        oauth2Client.setCredentials(credentials);
       }
 
       const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
@@ -50,51 +72,89 @@ export class McpCalendarService {
         };
       }
 
-      const created = [];
+      const created: CreatedEvent[] = [];
       for (const event of events) {
-        const res = await calendar.events.insert({
-          calendarId,
-          requestBody: event,
-        });
-        created.push({
-          id: res.data.id,
-          htmlLink: res.data.htmlLink,
-          summary: res.data.summary,
-        });
+        try {
+          const res = await calendar.events.insert({
+            calendarId,
+            requestBody: event,
+          });
+          created.push({
+            id: res.data.id,
+            htmlLink: res.data.htmlLink,
+            summary: res.data.summary,
+          });
+        } catch (insertError: any) {
+          this.logger.warn(`Failed to create event "${event.summary}":`, insertError.message);
+        }
       }
 
-      this.logger.log(`Created ${created.length} calendar events for user ${userId}`);
+      this.logger.log(`Successfully created ${created.length} events for user ${userId}`);
       return {
         success: true,
         eventCount: created.length,
-        events: created,
-        message: 'Roadmap added to your Google Calendar!',
+        events: created.filter(e => e.id), // only successful ones
+        message: 'Roadmap added to Google Calendar!',
       };
     } catch (error: any) {
       this.logger.error('Calendar MCP failed:', error.message);
       return {
         success: false,
         error: error.message.includes('invalid_grant')
-          ? 'Calendar access expired – please reconnect'
+          ? 'Calendar access revoked – please reconnect'
           : error.message || 'Failed to add to calendar',
       };
     }
   }
 
-  private getAuthClient(userId: string) {
-    const tokens = this.mockTokens.get(userId);
-    if (!tokens) throw new Error('No tokens');
-
+  private createOAuthClient(tokens: any) {
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID!,
       process.env.GOOGLE_CLIENT_SECRET!,
       `${process.env.BACKEND_URL}/mcp/calendar/callback`,
     );
-
     oauth2Client.setCredentials(tokens);
     return oauth2Client;
   }
 
+  private async getTokensFromDb(userId: string): Promise<any | null> {
+    const { data, error } = await this.supabase
+      .from('profiles')
+      .select('calendar_tokens')
+      .eq('id', userId)
+      .single();
+
+    if (error || !data?.calendar_tokens) {
+      return null;
+    }
+
+    return data.calendar_tokens;
+  }
+
+  private async saveTokensToDb(userId: string, tokens: any): Promise<void> {
+    const { error } = await this.supabase
+      .from('profiles')
+      .update({
+        calendar_tokens: tokens,
+        calendar_connected: true,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', userId);
+
+    if (error) {
+      this.logger.error('Failed to save calendar tokens:', error.message);
+    } else {
+      this.logger.log(`Saved refreshed tokens for user ${userId}`);
+    }
+  }
+
+  async storeTokens(userId: string, tokens: any) {
+    this.logger.log(`Storing tokens for user ${userId}`);
+    await this.saveTokensToDb(userId, tokens);
+    this.logger.log(`Tokens stored successfully for user ${userId}`);
+  }
+
+  // Keep generateEventsFromRoadmap unchanged
   private generateEventsFromRoadmap(roadmap: ParsedRoadmap, startDateIso?: string): CalendarEvent[] {
     const events: CalendarEvent[] = [];
     let currentDate = startDateIso ? new Date(startDateIso) : new Date();
@@ -103,7 +163,7 @@ export class McpCalendarService {
       // Stage kickoff event
       events.push({
         summary: `🚀 Start: ${stage.title}`,
-        description: stage.description,
+        description: `Stage: ${stage.title} - ${stage.nodes.length} topics to cover`,
         start: { dateTime: new Date(currentDate).toISOString() },
         end: { dateTime: new Date(currentDate.getTime() + 120 * 60 * 1000).toISOString() }, // 2 hours
         reminders: { useDefault: true },
@@ -128,11 +188,5 @@ export class McpCalendarService {
     }
 
     return events;
-  }
-
-  // For OAuth flow – store tokens after user connects
-  storeTokens(userId: string, tokens: any) {
-    this.mockTokens.set(userId, tokens);
-    this.logger.log(`Stored calendar tokens for user ${userId}`);
   }
 }

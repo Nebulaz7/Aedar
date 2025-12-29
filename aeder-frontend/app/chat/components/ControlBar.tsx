@@ -7,29 +7,66 @@ import {
   Calendar,
   CalendarCheck,
   ChevronDown,
-  Info,
 } from "lucide-react";
 import Link from "next/link";
 
 type PlanningDepth = "sprint" | "standard" | "architect";
 
+interface User {
+  id: string;
+}
+
+interface Profile {
+  calendar_connected?: boolean;
+}
+
 interface ControlBarProps {
   onDepthChange?: (depth: PlanningDepth) => void;
   onAutoScheduleChange?: (enabled: boolean) => void;
   isCalendarConnected?: boolean;
-  onConnectCalendar?: () => void;
+  user?: User | null;
+  profile?: Profile | null;
+  onCalendarConnected?: () => void;
 }
 
 const ControlBar: React.FC<ControlBarProps> = ({
   onDepthChange,
   onAutoScheduleChange,
   isCalendarConnected = false,
-  onConnectCalendar,
+  user,
+  profile,
+  onCalendarConnected,
 }) => {
   const [depth, setDepth] = useState<PlanningDepth>("standard");
   const [autoSchedule, setAutoSchedule] = useState(false);
   const [showDepthDropdown, setShowDepthDropdown] = useState(false);
   const [hoveredDepth, setHoveredDepth] = useState<PlanningDepth | null>(null);
+
+  const handleConnectCalendar = (userId: string) => {
+    // Opens Google's consent screen in a popup
+    const width = 500;
+    const height = 600;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+
+    const authWindow = window.open(
+      `${process.env.NEXT_PUBLIC_API_URL}/mcp/calendar/auth?userId=${userId}`,
+      'calendar-auth',
+      `width=${width},height=${height},left=${left},top=${top}`
+    );
+
+    const handleMessage = (event: MessageEvent) => {
+      // Only process calendar_connected messages
+      if (event.data?.type === 'calendar_connected' && event.data?.success) {
+        console.log('Calendar connected successfully!');
+        onCalendarConnected?.();
+        authWindow?.close();
+        window.removeEventListener('message', handleMessage);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+  };
 
   const depthOptions: {
     value: PlanningDepth;
@@ -96,7 +133,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
             </label>
             <button
               onClick={() => setShowDepthDropdown(!showDepthDropdown)}
-              className="flex text-black cursor-pointer items-center gap-2 px-4 py-2 bg-white border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm"
+              className="flex text-black cursor-pointer items-center gap-2 px-4 py-2 bg-white border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all font-bold text-sm"
             >
               {currentDepthOption?.icon}
               <span>{currentDepthOption?.label}</span>
@@ -146,8 +183,8 @@ const ControlBar: React.FC<ControlBarProps> = ({
               onClick={handleAutoScheduleToggle}
               className={`relative text-black cursor-pointer flex items-center gap-2 px-4 py-2 border-3 border-black font-bold text-sm transition-all ${
                 autoSchedule
-                  ? "bg-emerald-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] translate-x-[2px] translate-y-[2px]"
-                  : "bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
+                  ? "bg-emerald-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5"
+                  : "bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5"
               }`}
             >
               <div
@@ -188,11 +225,12 @@ const ControlBar: React.FC<ControlBarProps> = ({
               </div>
             ) : (
               <button
-                onClick={onConnectCalendar}
-                className="flex items-center text-black gap-2 px-4 py-2 cursor-pointer bg-yellow-300 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm"
+                onClick={() => user?.id && handleConnectCalendar(user.id)}
+                disabled={!user?.id}
+                className="flex items-center text-black gap-2 px-4 py-2 cursor-pointer bg-yellow-300 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Calendar className="w-4 h-4" />
-                <span>Connect</span>
+                {profile?.calendar_connected ? '✅Connected' : 'Connect'}
               </button>
             )}
           </div>
