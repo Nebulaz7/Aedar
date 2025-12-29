@@ -180,13 +180,21 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         {/* Loading State */}
         {loading && <LoadingState />}
 
-        {/* Zero State - Show when no roadmap */}
-        {!loading && !roadmap && (
-          <ZeroState
-            userName={userName}
-            onSuggestionClick={handleSuggestionClick}
-          />
-        )}
+        {/* Hero Text */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-black text-black mb-2 uppercase tracking-tight">
+            Ready to execute,{" "}
+            <span className="text-emerald-500">{userName}</span>?
+          </h1>
+          <p className="text-lg md:text-xl text-black/70 font-medium max-w-md mx-auto">
+            Describe your idea, and Aedar will build the plan.
+          </p>
+        </div>
+
+        {/* Input Area - Always visible at top */}
+        <div className="w-full max-w-3xl mt-auto pt-8 mb-auto">
+          <ChatInput onSendMessage={handleSendMessage} isLoading={loading} />
+        </div>
 
         {/* Roadmap Display */}
         {!loading && roadmap && typeof roadmap !== "string" && (
@@ -209,10 +217,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           </div>
         )}
 
-        {/* Input Area - Always visible at bottom */}
-        <div className="w-full max-w-3xl mt-auto pt-8">
-          <ChatInput onSendMessage={handleSendMessage} isLoading={loading} />
-        </div>
+        {/* Zero State - Show when no roadmap */}
+        {!loading && !roadmap && (
+          <ZeroState
+            userName={userName}
+            onSuggestionClick={handleSuggestionClick}
+          />
+        )}
       </main>
     </div>
   );

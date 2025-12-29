@@ -159,7 +159,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
       <div
         className={`bg-white border-4 border-black transition-all duration-150 ${
           isFocused
-            ? "shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-[-2px] translate-y-[-2px]"
+            ? "border-emerald-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-[-2px] translate-y-[-2px]"
             : "shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
         }`}
       >
@@ -198,7 +198,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
 
             <button
               onClick={startSpeechRecognition}
-              className={`p-2 border-2 border-black transition-colors ${
+              className={`p-2 border-2 cursor-pointer border-black transition-colors ${
                 listening
                   ? "bg-red-400 animate-pulse"
                   : "bg-white hover:bg-emerald-100"
@@ -234,7 +234,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
               disabled={isLoading || !inputValue.trim()}
               className={`p-3 border-3 border-black font-bold transition-all ${
                 inputValue.trim() && !isLoading
-                  ? "bg-emerald-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
+                  ? "bg-emerald-400 cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   : "bg-gray-200 cursor-not-allowed"
               }`}
             >

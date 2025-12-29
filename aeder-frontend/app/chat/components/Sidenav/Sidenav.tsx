@@ -261,7 +261,7 @@ const Sidenav: React.FC<SidenavProps> = ({
           <div className="p-2 border-t-2 border-black/10">
             <button
               onClick={() => setShowAccountModal(true)}
-              className={`flex items-center px-2 py-2 w-full text-left
+              className={`flex cursor-pointer items-center px-2 py-2 w-full text-left
                 text-black hover:bg-emerald-100 transition-colors mb-1
                 ${isExpanded ? "justify-start" : "justify-center"}`}
             >
@@ -273,7 +273,7 @@ const Sidenav: React.FC<SidenavProps> = ({
 
             <button
               onClick={() => setShowSettingsModal(true)}
-              className={`flex items-center px-2 py-2 w-full text-left
+              className={`flex cursor-pointer items-center px-2 py-2 w-full text-left
                 text-black hover:bg-emerald-100 transition-colors mb-1
                 ${isExpanded ? "justify-start" : "justify-center"}`}
             >
@@ -285,7 +285,7 @@ const Sidenav: React.FC<SidenavProps> = ({
 
             <button
               onClick={() => setShowSignoutModal(true)}
-              className={`flex items-center px-2 py-2 w-full text-left
+              className={`flex cursor-pointer items-center px-2 py-2 w-full text-left
                 text-red-600 hover:bg-red-100 transition-colors
                 ${isExpanded ? "justify-start" : "justify-center"}`}
             >

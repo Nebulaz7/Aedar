@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Info,
 } from "lucide-react";
+import Link from "next/link";
 
 type PlanningDepth = "sprint" | "standard" | "architect";
 
@@ -39,19 +40,19 @@ const ControlBar: React.FC<ControlBarProps> = ({
     {
       value: "sprint",
       label: "Sprint",
-      icon: <Zap className="w-4 h-4" />,
+      icon: <Zap className="w-4 h-4 text-black" />,
       tooltip: "Best for simple tasks. Generates 3-5 key milestones.",
     },
     {
       value: "standard",
       label: "Standard",
-      icon: <Layers className="w-4 h-4" />,
+      icon: <Layers className="w-4 h-4 text-black" />,
       tooltip: "Default. Covers architecture, dev, and launch phases.",
     },
     {
       value: "architect",
       label: "Architect",
-      icon: <Building2 className="w-4 h-4" />,
+      icon: <Building2 className="w-4 h-4 text-black" />,
       tooltip:
         "Detailed breakdown. Includes risk analysis, tech stack choices, and QA steps.",
     },
@@ -76,9 +77,14 @@ const ControlBar: React.FC<ControlBarProps> = ({
       <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-black uppercase tracking-tight">
-            <span className="text-black">Aeder</span>
-          </h1>
+          <Link
+            href="/"
+            className="text-2xl font-black uppercase tracking-tight"
+          >
+            <span className="bg-linear-to-r from-emerald-500 to-black text-transparent bg-clip-text">
+              Aeder
+            </span>
+          </Link>
         </div>
 
         {/* Controls */}
@@ -90,7 +96,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
             </label>
             <button
               onClick={() => setShowDepthDropdown(!showDepthDropdown)}
-              className="flex items-center gap-2 px-4 py-2 bg-white border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm"
+              className="flex text-black cursor-pointer items-center gap-2 px-4 py-2 bg-white border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm"
             >
               {currentDepthOption?.icon}
               <span>{currentDepthOption?.label}</span>
@@ -103,7 +109,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
 
             {/* Dropdown */}
             {showDepthDropdown && (
-              <div className="absolute top-full left-0 mt-2 w-56 bg-white border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] z-50">
+              <div className="absolute top-full cursor-pointer left-0 mt-2 w-56 bg-white border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] z-50">
                 {depthOptions.map((option) => (
                   <button
                     key={option.value}
@@ -118,7 +124,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
                   >
                     {option.icon}
                     <div className="flex-1">
-                      <span className="block">{option.label}</span>
+                      <span className="block text-black">{option.label}</span>
                       {hoveredDepth === option.value && (
                         <span className="text-xs font-normal text-black/60 mt-1 block">
                           {option.tooltip}
@@ -138,7 +144,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
             </label>
             <button
               onClick={handleAutoScheduleToggle}
-              className={`relative flex items-center gap-2 px-4 py-2 border-3 border-black font-bold text-sm transition-all ${
+              className={`relative text-black cursor-pointer flex items-center gap-2 px-4 py-2 border-3 border-black font-bold text-sm transition-all ${
                 autoSchedule
                   ? "bg-emerald-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] translate-x-[2px] translate-y-[2px]"
                   : "bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
@@ -183,7 +189,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
             ) : (
               <button
                 onClick={onConnectCalendar}
-                className="flex items-center gap-2 px-4 py-2 bg-yellow-300 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm"
+                className="flex items-center text-black gap-2 px-4 py-2 cursor-pointer bg-yellow-300 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold text-sm"
               >
                 <Calendar className="w-4 h-4" />
                 <span>Connect</span>

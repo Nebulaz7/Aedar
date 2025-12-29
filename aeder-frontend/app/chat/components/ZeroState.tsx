@@ -49,17 +49,6 @@ const ZeroState: React.FC<ZeroStateProps> = ({
       <div className="absolute top-48 right-24 w-8 h-8 bg-yellow-300 border-3 border-black -rotate-6 hidden lg:block" />
       <div className="absolute bottom-32 left-32 w-6 h-6 bg-pink-400 border-3 border-black rounded-full hidden lg:block" />
 
-      {/* Hero Text */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-black text-black mb-4 uppercase tracking-tight">
-          Ready to execute, <span className="text-emerald-500">{userName}</span>
-          ?
-        </h1>
-        <p className="text-lg md:text-xl text-black/70 font-medium max-w-md mx-auto">
-          Describe your idea, and Aedar will build the plan.
-        </p>
-      </div>
-
       {/* Quick Suggestions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl w-full">
         {suggestions.map((suggestion, index) => (
