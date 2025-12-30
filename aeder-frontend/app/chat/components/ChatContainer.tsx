@@ -52,6 +52,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [autoSchedule, setAutoSchedule] = useState(false);
   const [isCalendarConnected, setIsCalendarConnected] = useState(false);
   const router = useRouter();
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://aedar.onrender.com";
 
   // Fetch user's calendar connection status from profile
   useEffect(() => {
@@ -114,7 +115,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     setRoadmapTitle(message);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
+     const res = await fetch(`${API_BASE}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -131,17 +132,15 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
         // Save the roadmap
         try {
-          const saveRes = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/roadmap`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                userId,
-                title: message,
-                goal: message,
-                roadmap: data.roadmap,
-              }),
+         const saveRes = await fetch(`${API_BASE}/roadmap`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId,
+              title: message,
+              goal: message,
+              roadmap: data.roadmap,
+            }),
             }
           );
 

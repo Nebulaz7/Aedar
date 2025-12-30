@@ -10,7 +10,7 @@ async function bootstrap() {
   app.enableCors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        'https://aedar.onrender.com',
+        'https://aedar.vercel.app',
         'http://localhost:3000',
       ];
       
